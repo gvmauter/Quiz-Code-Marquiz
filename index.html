@@ -61,8 +61,8 @@ button.btn.btn-secondary {
 <section class="box">
 	<div class="container">
 		<div class="input-group input-group-lg">
-			<span class="input-group-addon" id="basic-addon3">Прямая ссылка</span>
-			<input type="text" class="form-control quizId" placeholder="https://mrqz.me/c80709">
+			<span class="input-group-addon" id="basic-addon3">Квиз</span>
+			<input type="text" class="form-control quizId" placeholder="ID / Прямая ссылка">
 			<span class="input-group-btn">
 				<button class="btn btn-secondary" onclick="userId();" type="button">Проверить квиз</button>
 			</span>
@@ -90,11 +90,15 @@ button.btn.btn-secondary {
 function userId() {
 	let quizId = $(".quizId").val();
     idQUIZ = quizId.split('/');
-	console.log(idQUIZ[3].length);
-    if (idQUIZ[3].length > 20 ) {
-        urls = "https://proxy3-api.marquiz.ru/v1/Quizzes/" + idQUIZ[3]
+	console.log(idQUIZ.length);
+    if (idQUIZ.length < 2) {
+        urls = "https://proxy3-api.marquiz.ru/v1/Quizzes/" + idQUIZ
     } else {
-        urls = "https://api.marquiz.ru/v1/Quizzes/findByKey?key=" + idQUIZ[3]
+        if (idQUIZ[3].length > 20 ) {
+            urls = "https://proxy3-api.marquiz.ru/v1/Quizzes/" + idQUIZ[3]
+        } else {
+            urls = "https://api.marquiz.ru/v1/Quizzes/findByKey?key=" + idQUIZ[3]
+        }
     }
 	$.ajax({
      url: urls,
