@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Info Quiz Code</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<style>
+body {
+	margin: 0;
+	background-color: #1e1e3e;
+}
+.box {
+	display: flex;
+	align-items: center;
+	min-height: 100vh;
+}
+.input-group {
+	max-width: 500px;
+	margin: 20px auto;
+}
+.userId {
+	font-size: 18px;
+    text-align: center;
+}
+.btn-secondary {
+	background-color: #d34085;
+	color: #ffffff !important;
+	transition: 0.5s;
+}
+.btn-secondary:hover {
+	background-color: #c02c72;
+}
+#basic-addon3 {
+	border: 0;
+}
+.codeHTML {
+    font-size: 10px;
+    word-break: break-all;
+    text-align: left;
+}
+.codeHTML_base {text-align: left;}
+span#basic-addon3 {
+    font-size: 11px;
+}
+
+span.input-group-btn {
+}
+
+button.btn.btn-secondary {
+    font-size: 13px !important;
+}
+</style>
+
+</head>
+<body>
+
+
+<section class="box">
+	<div class="container">
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon" id="basic-addon3">Прямая ссылка</span>
+			<input type="text" class="form-control quizId" placeholder="https://mrqz.me/c80709">
+			<span class="input-group-btn">
+				<button class="btn btn-secondary" onclick="userId();" type="button">Проверить квиз</button>
+			</span>
+		</div>
+		<div class="userId">
+            <div class="codeHTML alert alert-info" style="display: none;">
+                <p><b>Код:</b></p>
+                <div class="codeHTML_text"></div>
+            </div>
+            <div class="codeHTML_base alert alert-info" style="display: none;">
+                <p><b>Тип:</b> <span></span></p>
+                <div class="codeHTML_text_base"><pre></pre></div>
+            </div>
+        </div>
+	</div>
+</section>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"> </script>
+<script >
+function userId() {
+	let quizId = $(".quizId").val();
+    idQUIZ = quizId.split('/');
+	console.log(idQUIZ[3].length);
+    if (idQUIZ[3].length > 20 ) {
+        urls = "https://proxy3-api.marquiz.ru/v1/Quizzes/" + idQUIZ[3]
+    } else {
+        urls = "https://api.marquiz.ru/v1/Quizzes/findByKey?key=" + idQUIZ[3]
+    }
+	$.ajax({
+     url: urls,
+     dataType: 'json', 
+     success: function(json){
+         var HTMLcode = json.settings.code;
+
+        //  let HTMLcodeArr = HTMLcode.split(' ');
+         console.log(new DOMParser().parseFromString(HTMLcode, "text/html").getElementsByTagName("ids")[0]);
+         var text = HTMLcode;
+        var div = document.createElement('div');
+        div.innerHTML = text;
+        var result = div.firstChild;
+        $(".codeHTML_text").text( HTMLcode);
+		$(".codeHTML").show();
+        if ($(result).attr("src").length) {
+            let HTMLcodeArr = $(result).attr("src").split(',');
+            HTML_type = HTMLcodeArr[0].split(';');
+            if (HTMLcodeArr.length>0) {
+                $(".codeHTML_base").show();
+                $(".codeHTML_base p span").text(HTML_type[1]);
+                $(".codeHTML_text_base pre").html(atob(HTMLcodeArr[1]));
+            }
+            console.log(atob(HTMLcodeArr[1]));
+        }
+        
+
+       
+	}
+});
+}
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>
+
